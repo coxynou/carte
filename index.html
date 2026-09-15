@@ -160,33 +160,8 @@ if(data.bgImage){
   };
 }
 
-function buildVCard(){
-  const nameParts = (data.name || "").trim().split(" ");
-  const last = nameParts.length > 1 ? nameParts.pop() : "";
-  const first = nameParts.join(" ");
-  let site = data.site || "";
-  if(site && !/^https?:\/\//.test(site)) site = "https://" + site;
-
-  return [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
-    `N:${last};${first};;;`,
-    `FN:${data.name || ""}`,
-    data.company ? `ORG:${data.company}` : "",
-    data.role ? `TITLE:${data.role}` : "",
-    data.phone ? `TEL;TYPE=CELL:${data.phone}` : "",
-    data.mail ? `EMAIL:${data.mail}` : "",
-    site ? `URL:${site}` : "",
-    "END:VCARD"
-  ].filter(Boolean).join("\n");
-}
-
 el('addContactBtn').addEventListener('click', ()=>{
-  const vcard = buildVCard();
-  const blob = new Blob([vcard], { type: "text/vcard" });
-  const url = URL.createObjectURL(blob);
-  window.location.href = url;
-  setTimeout(() => URL.revokeObjectURL(url), 10000);
+  window.location.href = 'contact.vcf';
 });
 </script>
 </body>
