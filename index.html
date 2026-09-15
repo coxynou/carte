@@ -160,7 +160,21 @@ if(data.bgImage){
   };
 }
 
-el('addContactBtn').addEventListener('click', ()=>{
+let contactFilePromise = fetch('contact.vcf')
+  .then(res => res.blob())
+  .then(blob => new File([blob], 'contact.vcf', { type: 'text/vcard' }))
+  .catch(() => null);
+
+el('addContactBtn').addEventListener('click', async ()=>{
+  const file = await contactFilePromise;
+  if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file] });
+      return;
+    } catch(e) {
+      if (e && e.name === 'AbortError') return;
+    }
+  }
   window.location.href = 'contact.vcf';
 });
 </script>
